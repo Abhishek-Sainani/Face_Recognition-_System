@@ -217,7 +217,7 @@ class Student:
         update_btn = Button(btn_frame, width=17, command=self.update_data, text="Update", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
         update_btn.grid(row=0, column=1)
 
-        delete_btn = Button(btn_frame, width=17, text="Delete", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
+        delete_btn = Button(btn_frame, width=17, command=self.delete_data, text="Delete", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
         delete_btn.grid(row=0, column=2)
 
         reset_btn = Button(btn_frame, width=17, text="Reset", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
@@ -406,7 +406,46 @@ class Student:
 
 
             #delete function =========================================
+    
+    def delete_data(self):
+        if self.var_std_id.get() == "":
+            messagebox.showerror("Error", "All Fields are required", parent=self.root)
+        else:
+            try:
+                delete = messagebox.askyesno("Delete", "Do you want to delete this student details?", parent=self.root)
+                if delete > 0:
+                    conn = mysql.connector.connect(host="localhost", username="root", password="Abhi123.", database="face_recognizer", port=330)
+                    my_cursor = conn.cursor()
+                    sql = "delete from student where Student_id=%s"
+                    val = (self.var_std_id.get(),)
+                    my_cursor.execute(sql, val)
+                    conn.commit()
+                    self.fetch_data()
+                    conn.close()
+                    messagebox.showinfo("Success", "Student details have been deleted successfully", parent=self.root)
+                    self.clear()
+                else:
+                    if not delete:
+                        return
+            except Exception as es:
+                messagebox.showerror("Error", f"Due to: {str(es)}", parent=self.root)
 
+    def clear(self):
+        self.var_dep.set("Select Department")
+        self.var_course.set("Select Course")
+        self.var_year.set("Select Year")
+        self.var_semester.set("Select Semester")
+        self.var_std_id.set("")
+        self.var_std_name.set("")
+        self.var_div.set("A")
+        self.var_roll.set("")
+        self.var_gender.set("Male")
+        self.var_dob.set("")
+        self.var_email.set("")
+        self.var_phone.set("")
+        self.var_address.set("")
+        self.var_teacher.set("")
+        self.var_radio.set("")
     
 
     
