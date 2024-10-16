@@ -220,7 +220,7 @@ class Student:
         delete_btn = Button(btn_frame, width=17, command=self.delete_data, text="Delete", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
         delete_btn.grid(row=0, column=2)
 
-        reset_btn = Button(btn_frame, width=17, text="Reset", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
+        reset_btn = Button(btn_frame, width=17,command=self.reset, text="Reset", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
         reset_btn.grid(row=0, column=3)
 
         # Button frame
@@ -446,6 +446,27 @@ class Student:
         self.var_address.set("")
         self.var_teacher.set("")
         self.var_radio.set("")
+
+
+        #reset button=================
+    def reset(self):
+        self.var_dep.set("Select Department")
+        self.var_course.set("Select Course")
+        self.var_year.set("Select Year")
+        self.var_semester.set("Select Semester")
+        self.var_std_id.set("")
+        self.var_std_name.set("")
+        self.var_div.set("A")  # Default division
+        self.var_roll.set("")
+        self.var_gender.set("Male")  # Default gender
+        self.var_dob.set("")
+        self.var_email.set("")
+        self.var_phone.set("")
+        self.var_address.set("")
+        self.var_teacher.set("")
+        self.var_radio.set("")  # Reset radio buttons
+    
+
     
 
     
