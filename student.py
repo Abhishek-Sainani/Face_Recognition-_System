@@ -135,8 +135,13 @@ class Student:
         class_div_label = Label(class_Student_frame, text="Class Division:", font=("Times New Roman", 12, "bold"), bg="white")
         class_div_label.grid(row=1, column=0, padx=10, pady=10, sticky=W)
 
-        class_div_entry = ttk.Entry(class_Student_frame, textvariable=self.var_div, width=20, font=("Times New Roman", 12, "bold"))
-        class_div_entry.grid(row=1, column=1, padx=10, sticky=W)
+        # class_div_entry = ttk.Entry(class_Student_frame, textvariable=self.var_div, width=20, font=("Times New Roman", 12, "bold"))
+        # class_div_entry.grid(row=1, column=1, padx=10, sticky=W)
+
+        div_combo = ttk.Combobox(class_Student_frame, textvariable=self.var_div, font=("Times New Roman", 12, "bold"), width=17)
+        div_combo["values"] = ("A", "B", "C",)
+        div_combo.current(0)
+        div_combo.grid(row=1, column=1, padx=2, pady=10, sticky=W)
 
         # Roll No
         Roll_no_label = Label(class_Student_frame, text="Roll No:", font=("Times New Roman", 12, "bold"), bg="white")
@@ -149,8 +154,14 @@ class Student:
         Gender_label = Label(class_Student_frame, text="Gender :", font=("Times New Roman", 12, "bold"), bg="white")
         Gender_label.grid(row=2, column=0, padx=10, pady=10, sticky=W)
 
-        Gender_entry = ttk.Entry(class_Student_frame, textvariable=self.var_gender, width=20, font=("Times New Roman", 12, "bold"))
-        Gender_entry.grid(row=2, column=1, padx=10, sticky=W)
+        # Gender_entry = ttk.Entry(class_Student_frame, textvariable=self.var_gender, width=20, font=("Times New Roman", 12, "bold"))
+        # Gender_entry.grid(row=2, column=1, padx=10, sticky=W)
+
+        gender_combo = ttk.Combobox(class_Student_frame, textvariable=self.var_gender, font=("Times New Roman", 12, "bold"), width=17)
+        gender_combo["values"] = ("Male", "Female", "other",)
+        gender_combo.current(0)
+        gender_combo.grid(row=2, column=1, padx=2, pady=10, sticky=W)
+
 
         # DOB
         DOB_label = Label(class_Student_frame, text="DOB:", font=("Times New Roman", 12, "bold"), bg="white")
@@ -203,7 +214,7 @@ class Student:
         save_btn = Button(btn_frame, text="Save", command=self.add_data, width=17, font=("Times New Roman", 12, "bold"), bg="blue", fg="white")
         save_btn.grid(row=0, column=0)
 
-        update_btn = Button(btn_frame, width=17, text="Update", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
+        update_btn = Button(btn_frame, width=17, command=self.update_data, text="Update", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
         update_btn.grid(row=0, column=1)
 
         delete_btn = Button(btn_frame, width=17, text="Delete", font=("Times New Roman", 13, "bold"), bg="blue", fg="white")
@@ -356,6 +367,49 @@ class Student:
         self.var_teacher.set(data[13]),
         self.var_radio.set(data[14])
 
+        #update function =======================
+
+    def update_data(self):
+        if self.var_dep.get() == "Select Department" or self.var_course.get() == "Select Course" or self.var_year.get() == "Select Year":
+            messagebox.showerror("Error", "All Fields are required", parent=self.root)
+            return  # Exit the function if validation fails
+
+        try:
+            update = messagebox.askyesno("Update", "Do you want to update this student details?", parent=self.root)
+            if update:  # If the user confirms the update
+                conn = mysql.connector.connect(host="localhost", username="root", password="Abhi123.", database="face_recognizer", port=330)
+                my_cursor = conn.cursor()
+                my_cursor.execute("UPDATE student SET Dep=%s, course=%s, Year=%s, Semester=%s, Division=%s, Roll=%s, Gender=%s, Dob=%s, Email=%s, Phone=%s, Address=%s, Teacher=%s, PhotoSample=%s WHERE Student_id=%s", (
+                    self.var_dep.get(),
+                    self.var_course.get(),
+                    self.var_year.get(),
+                    self.var_semester.get(),
+                    self.var_div.get(),  # Corrected here
+                    self.var_roll.get(),
+                    self.var_gender.get(),
+                    self.var_dob.get(),
+                    self.var_email.get(),
+                    self.var_phone.get(),
+                    self.var_address.get(),
+                    self.var_teacher.get(),
+                    self.var_radio.get(),
+                    self.var_std_id.get()  # Ensure this is the correct ID for the student
+                ))
+                conn.commit()  # Commit the changes
+                self.fetch_data()  # Refresh the data in the table
+                conn.close()  # Close the connection
+                messagebox.showinfo("Success", "Student details have been updated successfully", parent=self.root)
+        except Exception as es:
+            messagebox.showerror("Error", f"Due to: {str(es)}", parent=self.root)
+
+
+
+
+            #delete function =========================================
+
+    
+
+    
 if __name__ == "__main__":
     root = Tk()
     obj = Student(root)
