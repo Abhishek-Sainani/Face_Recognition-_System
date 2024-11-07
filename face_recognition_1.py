@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 import mysql.connector
 import cv2
 import numpy as np
+from datetime import datetime
 
 
 class Face_Recognition1:
@@ -35,13 +36,27 @@ class Face_Recognition1:
         b1_1 = Button(f_lbl, text="DETECT FACE", command=self.face_recog, cursor="hand2", font=("times new roman", 18, "bold"), bg="green", fg="white")
         b1_1.place(x=385, y=600, width=200, height=40)
 
+        # Set to track attendance
+        self.attendance_set = set()
+
+    def mark_attendance(self, student_id, roll, name, department):
+        if student_id not in self.attendance_set:  # Check if already marked
+            with open("abhishek.csv", "a", newline="") as f:  # Open in append mode
+                now = datetime.now()
+                date_str = now.strftime("%d/%m/%Y")
+                time_str = now.strftime("%H:%M:%S")
+                f.write(f"{student_id},{roll},{name},{department},{time_str},{date_str},Present\n")
+                print(f"Attendance marked for {name} (ID: {student_id})")
+                self.attendance_set.add(student_id)  # Add to the set
+        else:
+            print(f"Attendance already marked for ID: {student_id}")
     def face_recog(self):
         def draw_boundary(img, classifier, scaleFactor, minNeighbors, color, text, clf):
             gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             features = classifier.detectMultiScale(gray_image, scaleFactor, minNeighbors)
 
             for (x, y, w, h) in features:
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 3)
+                cv2.rectangle(img, (x, y), (x + w, y + h), color, 3)
                 id, predict = clf.predict(gray_image[y:y + h, x:x + w])
                 confidence = int((100 * (1 - predict / 300)))
 
@@ -58,20 +73,20 @@ class Face_Recognition1:
                     print(f"Connected to database, Student ID: {id}")
 
                     # Fetch details
-                    my_cursor.execute("SELECT Name FROM student WHERE Student_id=%s", (id,))
-                    n = my_cursor.fetchone()
-                    n = n[0] if n else "Unknown"
-                    print(f"Name: {n}")
+                    my_cursor.execute("SELECT Name, Roll, Dep FROM student WHERE Student_id=%s", (id,))
+                    result = my_cursor.fetchone()
+                    if result:
+                        name, roll, department = result
+                        print(f"Name: {name}, Roll: {roll}, Department: {department}")
 
-                    my_cursor.execute("SELECT Roll FROM student WHERE Student_id=%s", (id,))
-                    r = my_cursor.fetchone()
-                    r = r[0] if r else "Unknown"
-                    print(f"Roll: {r}")
-
-                    my_cursor.execute("SELECT Dep FROM student WHERE Student_id=%s", (id,))
-                    d = my_cursor.fetchone()
-                    d = d[0] if d else "Unknown"
-                    print(f"Department: {d}")
+                        if confidence > 20:
+                            self.mark_attendance (id, roll, name, department)  # Save attendance
+                            cv2.putText(img, f"Roll: {roll}", (x, y - 55), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
+                            cv2.putText(img, f"Name: {name}", (x, y - 30), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
+                            cv2.putText(img, f"Department: {department}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
+                        else:
+                            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
+                            cv2.putText(img, "Unknown Face", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
 
                 except mysql.connector.Error as err:
                     print(f"Database Error: {err}")
@@ -80,14 +95,6 @@ class Face_Recognition1:
                     if conn:
                         conn.close()
                         print("Connection closed")
-
-                if confidence > 20:
-                    cv2.putText(img, f"Roll: {r}", (x, y - 55), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
-                    cv2.putText(img, f"Name: {n}", (x, y - 30), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
-                    cv2.putText(img, f"Department: {d}", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
-                else:
-                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
-                    cv2.putText(img, "Unknown Face", (x, y - 5), cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 3)
 
         def recognize(img, clf, faceCascade):
             draw_boundary(img, faceCascade, 1.1, 10, (255, 25, 255), "Face", clf)
