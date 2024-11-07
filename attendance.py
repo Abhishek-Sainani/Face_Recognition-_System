@@ -24,14 +24,14 @@ class Attendance:
         self.var_atten_attendance=StringVar()
 
           # First image
-        img = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img = Image.open("scaning.png")
         img = img.resize((800, 200), Image.LANCZOS)
         self.photoimg = ImageTk.PhotoImage(img)
         f_lbl = Label(self.root, image=self.photoimg)
         f_lbl.place(x=0, y=0, width=800, height=200)
 
         # Second image
-        img1 = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img1 = Image.open("scaning.png")
         img1 = img1.resize((800, 200), Image.LANCZOS)
         self.photoimg1 = ImageTk.PhotoImage(img1)
         f_lbl = Label(self.root, image=self.photoimg1)
@@ -57,7 +57,7 @@ class Attendance:
         LEFT_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE, text="Student Attendance Details", font=("Times New Roman", 12, "bold"))
         LEFT_frame.place(x=10, y=5, width=750, height=605)
 
-        img_left = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img_left = Image.open("rasing.png")
         img_left = img_left.resize((550, 130), Image.LANCZOS)
         self.photoimg_left = ImageTk.PhotoImage(img_left)
         f_lbl = Label(LEFT_frame, image=self.photoimg_left)

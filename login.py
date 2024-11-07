@@ -12,9 +12,13 @@ class Login_window:
         self.root.title("Login")
 
         # Load and display the background image
-        self.bg = ImageTk.PhotoImage(file=r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        bg_img = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        bg_img = bg_img.resize((1530, 790), Image.LANCZOS)  # Resize the image to fit the window size
+        self.bg = ImageTk.PhotoImage(bg_img)
+
+        # Display the resized background image
         lbl_bg = Label(self.root, image=self.bg)
-        lbl_bg.place(x=0, y=0, relwidth=1, relheight=1)
+        lbl_bg.place(x=0, y=0, width=1530, height=790)
 
         # Frame for login form
         frame = Frame(self.root, bg="black")

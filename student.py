@@ -30,21 +30,21 @@ class Student:
         self.var_radio = StringVar()
 
         # First image
-        img = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img = Image.open("scaning.png")
         img = img.resize((533, 130), Image.LANCZOS)
         self.photoimg = ImageTk.PhotoImage(img)
         f_lbl = Label(self.root, image=self.photoimg)
         f_lbl.place(x=0, y=0, width=533, height=130)
 
         # Second image
-        img1 = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img1 = Image.open("scan.png")
         img1 = img1.resize((500, 130), Image.LANCZOS)
         self.photoimg1 = ImageTk.PhotoImage(img1)
         f_lbl = Label(self.root, image=self.photoimg1)
         f_lbl.place(x=533, y=0, width=500, height=130)
 
         # Third image
-        img2 = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img2 = Image.open("scaning.png")
         img2 = img2.resize((533, 130), Image.LANCZOS)
         self.photoimg2 = ImageTk.PhotoImage(img2)
         f_lbl = Label(self.root, image=self.photoimg2)
@@ -69,7 +69,7 @@ class Student:
         LEFT_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE, text="Student Details", font=("Times New Roman", 12, "bold"))
         LEFT_frame.place(x=10, y=5, width=750, height=605)
 
-        img_left = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img_left = Image.open("rased.png")
         img_left = img_left.resize((550, 130), Image.LANCZOS)
         self.photoimg_left = ImageTk.PhotoImage(img_left)
         f_lbl = Label(LEFT_frame, image=self.photoimg_left)
@@ -137,9 +137,7 @@ class Student:
         class_div_label = Label(class_Student_frame, text="Class Division:", font=("Times New Roman", 12, "bold"), bg="white")
         class_div_label.grid(row=1, column=0, padx=10, pady=10, sticky=W)
 
-        # class_div_entry = ttk.Entry(class_Student_frame, textvariable=self.var_div, width=20, font=("Times New Roman", 12, "bold"))
-        # class_div_entry.grid(row=1, column=1, padx=10, sticky=W)
-
+        
         div_combo = ttk.Combobox(class_Student_frame, textvariable=self.var_div, font=("Times New Roman", 12, "bold"), width=17)
         div_combo["values"] = ("A", "B", "C",)
         div_combo.current(0)
@@ -240,7 +238,7 @@ class Student:
         RIGHT_frame = LabelFrame(main_frame, bd=2, bg="white", relief=RIDGE, text="Student Details", font=("Times New Roman", 12, "bold"))
         RIGHT_frame.place(x=770, y=10, width=740, height=580)
 
-        img_right = Image.open(r"C:\Users\Abhishek Sainani\Desktop\images of project\photo.jpg")
+        img_right = Image.open("rased.png")
         img_right = img_right.resize((550, 130), Image.LANCZOS)
         self.photoimg_right = ImageTk.PhotoImage(img_right)
         f_lbl = Label(RIGHT_frame, image=self.photoimg_right)
@@ -557,6 +555,9 @@ class Student:
                 messagebox.showinfo("Result", "Generating data sets completed!!!")
             except Exception as es:
                 messagebox.showerror("Error", f"Due to: {str(es)}", parent=self.root)
+                
+
+                
                 
         
 
